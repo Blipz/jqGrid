@@ -2251,15 +2251,24 @@
 					return "<td role='gridcell' " + formatCol(pos, irow, v, srvr, rowId, rdata) + ">" + v + "</td>";
 				},
 				addMulti = function (rowid, pos, irow, checked, item) {
-					var checkboxHtml = "&nbsp;", hasCbox = true;
+					var checkboxHtml = "&nbsp;", hasCbox = true, attr = {};
 					if ($.isFunction(p.hasMultiselectCheckBox)) {
 						hasCbox = p.hasMultiselectCheckBox.call(self,
 								{ rowid: rowid, iRow: irow, iCol: pos, data: item });
 					}
 					if (hasCbox) {
-						checkboxHtml = "<input type='checkbox'" + " id='jqg_" + p.id + "_" + rowid +
-							"' class='cbox' name='jqg_" + p.id + "_" + rowid + "'" +
-							(checked ? " checked='checked' aria-checked='true'" : " aria-checked='false'") + "/>";
+						if ($.isFunction(p.checkboxAttr)) {
+							attr = p.checkboxAttr.call(self, rowid);
+						}
+						$.extend(attr, {
+							"type": "checkbox",
+							"id": "jqg_" + p.id + "_" + rowid,
+							"class": attr.class ? attr.class + " cbox" : "cbox",
+							"name": attr.name || "jqg_" + p.id + "_" + rowid,
+							"checked": checked ? "checked" : null,
+							"aria-checked": checked ? true : false
+						});
+						checkboxHtml = $("<input>", attr)[0].outerHTML;
 					}
 					return "<td role='gridcell' " + formatCol(pos, irow, "", null, rowid, true) + ">" +
 						checkboxHtml + "</td>";
