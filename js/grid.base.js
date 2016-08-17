@@ -2257,9 +2257,14 @@
 								{ rowid: rowid, iRow: irow, iCol: pos, data: item });
 					}
 					if (hasCbox) {
-						checkboxHtml = "<input type='checkbox'" + " id='jqg_" + p.id + "_" + rowid +
-							"' class='cbox' name='jqg_" + p.id + "_" + rowid + "'" +
-							(checked ? " checked='checked' aria-checked='true'" : " aria-checked='false'") + "/>";
+						if ($.isFunction(p.checkboxHtml)) {
+							checkboxHtml = p.checkboxHtml.call(self, rowid, checked);
+						}
+						else {
+							checkboxHtml = "<input type='checkbox'" + " id='jqg_" + p.id + "_" + rowid +
+								"' class='cbox' name='jqg_" + p.id + "_" + rowid + "'" +
+								(checked ? " checked='checked' aria-checked='true'" : " aria-checked='false'") + "/>";
+						}
 					}
 					return "<td role='gridcell' " + formatCol(pos, irow, "", null, rowid, true) + ">" +
 						checkboxHtml + "</td>";
